@@ -11,7 +11,18 @@ swarm:
         connection-url: jdbc:h2:file:~/feed_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
         user-name: sa
         password: sa
-        
+  logging:
+    periodic-rotating-file-handlers:
+      FILE:
+        file:
+          path: log/feed-aggregator.log
+        suffix: .yyyy-MM-dd
+    root-logger:
+      handlers:
+      - FILE
+  port:
+    offset: 50000
+
 feeds:
 #  - http://www.feedforall.com/sample.xml
 #  - http://www.feedforall.com/blog-feed.xml

@@ -1,0 +1,12 @@
+[Unit]
+Description=Feed Aggregator Service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/user
+ExecStart=/usr/bin/java -jar feed-aggregator-swarm.jar &
+ExecStop=/bin/kill -HUP $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
