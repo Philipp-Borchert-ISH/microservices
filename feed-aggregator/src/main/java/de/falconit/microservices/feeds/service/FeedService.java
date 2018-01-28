@@ -119,4 +119,9 @@ public class FeedService
 
     }
 
+    public SyndFeedDO getFeedByURL(String url)
+    {
+        return feedsDAO.findByURL(url);
+    }
+
 }

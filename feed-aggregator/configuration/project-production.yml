@@ -8,11 +8,11 @@ swarm:
     data-sources:
       FeedDS:
         driver-name: h2
-        connection-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+        connection-url: jdbc:h2:file:~/feed_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
         user-name: sa
         password: sa
         
 feeds:
-  - http://www.feedforall.com/sample.xml
-  - http://www.feedforall.com/blog-feed.xml
-  - http://www.feedforall.com/sample-feed.xml
+#  - http://www.feedforall.com/sample.xml
+#  - http://www.feedforall.com/blog-feed.xml
+#  - http://www.feedforall.com/sample-feed.xml

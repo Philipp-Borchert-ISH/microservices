@@ -27,4 +27,19 @@ public class FeedsDAO
                 .getResultList();
     }
 
+    public SyndFeedDO findByURL(String url)
+    {
+        List<SyndFeedDO> resultList = em
+                .createQuery("FROM SyndFeedDO WHERE url = :url",
+                        SyndFeedDO.class)
+                .setParameter("url", url).getResultList();
+
+        if (resultList.isEmpty())
+        {
+            return null;
+        }
+
+        return resultList.get(0);
+    }
+
 }

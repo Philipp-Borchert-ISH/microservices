@@ -1,6 +1,5 @@
 package de.falconit.microservices.feeds.rest;
 
-import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -20,8 +19,8 @@ import com.rometools.rome.io.SyndFeedOutput;
 import de.falconit.microservices.feeds.service.FeedService;
 
 @ApplicationScoped
-@Path("/hello")
-public class TestEndpoint
+@Path("/feeds")
+public class FeedServiceWeb
 {
 
     @Inject
@@ -29,14 +28,8 @@ public class TestEndpoint
 
     @GET
     @Produces("text/xml")
-    public Response doGet() throws Exception
+    public Response getAllFeeds() throws Exception
     {
-        feedService.addFeedByURL(new URL("http://www.feedforall.com/sample.xml"));
-        feedService.addFeedByURL(
-                new URL("http://www.feedforall.com/blog-feed.xml"));
-        feedService.addFeedByURL(
-                new URL("http://www.feedforall.com/sample-feed.xml"));
-        feedService.updateAllFeeds();
         SyndFeedOutput output = new SyndFeedOutput();
         SyndFeed aggregatedFeed = feedService.getAggregatedFeed();
         Collections.sort(aggregatedFeed.getEntries(),
@@ -58,8 +51,7 @@ public class TestEndpoint
                     }
                 });
 
-        Document outputW3CDom = output
-                .outputW3CDom(aggregatedFeed);
+        Document outputW3CDom = output.outputW3CDom(aggregatedFeed);
 
         return Response.ok().entity(outputW3CDom).build();
     }
