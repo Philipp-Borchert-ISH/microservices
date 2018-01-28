@@ -3,7 +3,10 @@ package de.falconit.microservices.feeds.rest;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,15 +19,20 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedOutput;
 
+import de.falconit.microservices.feeds.service.FeedInitializer;
 import de.falconit.microservices.feeds.service.FeedService;
 
-@ApplicationScoped
+@Stateless
+@TransactionAttribute(TransactionAttributeType.NEVER)
 @Path("/feeds")
 public class FeedServiceWeb
 {
 
     @Inject
     private FeedService feedService;
+
+    @EJB
+    private FeedInitializer initializer;
 
     @GET
     @Produces("text/xml")
