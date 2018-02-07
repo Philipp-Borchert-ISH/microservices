@@ -124,4 +124,13 @@ public class FeedService
         return feedsDAO.findByURL(url);
     }
 
+    public SyndFeed getFeedById(long id)
+    {
+        return feedsDAO.findById(id);
+    }
+
+    public List<SyndFeedDO> getActiveFeeds()
+    {
+        return feedsDAO.getActiveFeeds();
+    }
 }

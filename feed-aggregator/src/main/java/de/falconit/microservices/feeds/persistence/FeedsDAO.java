@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import com.rometools.rome.feed.synd.SyndFeed;
+
 import de.falconit.microservices.feeds.dataobject.SyndFeedDO;
 
 @ApplicationScoped
@@ -40,6 +42,11 @@ public class FeedsDAO
         }
 
         return resultList.get(0);
+    }
+
+    public SyndFeed findById(long id)
+    {
+        return em.find(SyndFeedDO.class, id).getSyndFeedImpl();
     }
 
 }

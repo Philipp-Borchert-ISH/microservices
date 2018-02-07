@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -63,4 +64,37 @@ public class FeedServiceWeb
 
         return Response.ok().entity(outputW3CDom).build();
     }
+
+    @GET
+    @Path("/{feedId}")
+    @Produces("text/xml")
+    public Response getFeedById(@PathParam("feedId") long feedId)
+            throws Exception
+    {
+        SyndFeedOutput output = new SyndFeedOutput();
+
+        return Response.ok()
+                .entity(output.outputW3CDom(feedService.getFeedById(feedId)))
+                .build();
+    }
+
+    @GET
+    @Path("/list")
+    @Produces("text/html")
+    public Response getFeedList()
+    {
+        StringBuilder sb = new StringBuilder("<html><body><table>");
+        feedService.getActiveFeeds().forEach(feed -> {
+            sb.append("<tr><td>");
+            sb.append(feed.getId());
+            sb.append("</td><td>");
+            sb.append(feed.getUrl());
+            sb.append("</td></tr>");
+        });
+
+        sb.append("</table></body></html>");
+
+        return Response.ok().entity(sb.toString()).build();
+    }
+
 }
