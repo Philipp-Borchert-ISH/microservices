@@ -1,7 +1,7 @@
 package de.falconit.microservices.feeds.service;
 
-import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +17,6 @@ import org.jboss.logging.Logger;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
-import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 
@@ -44,8 +43,12 @@ public class FeedService
             SyndFeed feed = null;
             try
             {
-                feed = input.build(new XmlReader(new URL(feedDO.getUrl())));
-            } catch (IllegalArgumentException | FeedException | IOException e)
+                URLConnection urlCon = new URL(feedDO.getUrl())
+                        .openConnection();
+                urlCon.setConnectTimeout(10000);
+                urlCon.setReadTimeout(10000);
+                feed = input.build(new XmlReader(urlCon));
+            } catch (Exception e)
             {
                 log.errorv(e,
                         "Issue with SyndFeed with id: {0} - provided url: {1}",
@@ -76,8 +79,12 @@ public class FeedService
         SyndFeed feed;
         try
         {
+            URLConnection urlCon = feedURL.openConnection();
+            urlCon.setConnectTimeout(10000);
+            urlCon.setReadTimeout(10000);
+
             feed = input.build(new XmlReader(feedURL));
-        } catch (IllegalArgumentException | FeedException | IOException e)
+        } catch (Exception e)
         {
             log.errorv(e, "Issue with SyndFeed with url: {0}",
                     feedURL.toExternalForm());
