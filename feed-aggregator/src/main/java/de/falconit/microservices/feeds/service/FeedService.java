@@ -3,10 +3,13 @@ package de.falconit.microservices.feeds.service;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,6 +29,8 @@ import de.falconit.microservices.feeds.persistence.FeedsDAO;
 @ApplicationScoped
 public class FeedService
 {
+
+    public static final int FEED_RETENTION_DAYS = 7;
 
     @Inject
     private FeedsDAO feedsDAO;
@@ -61,9 +66,15 @@ public class FeedService
                 log.error("empty feed received");
                 continue;
             }
+            Date filterDate = new Date(System.currentTimeMillis()
+                    - TimeUnit.DAYS.toMillis(FEED_RETENTION_DAYS));
 
-            Set<SyndEntry> existingEntries = new HashSet<>(
-                    feedDO.getSyndFeedImpl().getEntries());
+            Set<SyndEntry> existingEntries = new HashSet<>(feedDO
+                    .getSyndFeedImpl().getEntries().stream()
+                    .filter(entry -> entry.getPublishedDate() == null
+                            || entry.getPublishedDate().after(filterDate))
+                    .collect(Collectors.toList()));
+
             existingEntries.addAll(feed.getEntries());
 
             feed.setEntries(new ArrayList<>(existingEntries));
