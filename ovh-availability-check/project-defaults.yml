@@ -1,0 +1,39 @@
+product: 1801sk21
+
+swarm:
+  port:
+    offset: 51000
+  bind:
+    address: 0.0.0.0
+  # mail subsystem, mandatory for eMail alert feature
+  mail:
+    mail-sessions:
+      mail-socket:
+        jndi-name: java:jboss/mail/mailsession
+        smtp-server:
+          outbound-socket-binding-ref: mail-smtp
+        debug: false
+        from: user@localhost
+  network:
+    socket-binding-groups:
+      standard-sockets:
+        outbound-socket-bindings:
+          mail-smtp:
+            remote-host: localhost
+            remote-port: 25
+  # logging configuration to FILE
+  logging:
+    pattern-formatters:
+      ICI_COMPATIBLE:
+        pattern: '[%d{yyyy-MM-dd HH:mm:ss.SSS Zz}] %p BPM-APPLICATION [%c] [%t]%n%s%n%E%n'
+    periodic-rotating-file-handlers:
+      FILE:
+        file:
+          path: ovh-availability-check.log
+        suffix: .yyyy-MM-dd
+        named-formatter: ICI_COMPATIBLE
+        encoding: utf-8
+        append: true
+    root-logger:
+      handlers:
+      - FILE
